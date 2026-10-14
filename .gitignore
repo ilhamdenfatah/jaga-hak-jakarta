@@ -1,0 +1,24 @@
+# Rahasia: jangan pernah masuk repo
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Database Chroma dibangun ulang di tiap perangkat (python rag/build_chroma.py)
+rag/chroma_db/
+
+# PDF sumber asli disimpan di Google Drive, bukan di repo
+data/sumber_pdf/
+
+# File bawaan editor dan sistem operasi
+.vscode/
+.idea/
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
