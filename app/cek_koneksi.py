@@ -1,9 +1,6 @@
 """
 Cek koneksi ke database Supabase.
 
-Cara pakai (jalankan dari folder utama repo):
-    python app/cek_koneksi.py
-
 Script ini hanya MEMBACA. Tidak ada data yang diubah.
 Isi DATABASE_URL tidak pernah ditampilkan ke layar.
 """
