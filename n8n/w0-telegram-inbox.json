@@ -1,0 +1,841 @@
+{
+  "name": "W0 Kotak Masuk Telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -112,
+        128
+      ],
+      "id": "aef6225b-1961-472f-8225-e47a0290ce3f",
+      "name": "Telegram Trigger",
+      "webhookId": "11253d87-826e-4043-b86c-481702c7c458",
+      "credentials": {
+        "telegramApi": {
+          "id": "9LHoJ6pnXH2CAzD5",
+          "name": "JHJ Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Kata kunci program untuk jalur W5 (bonus). Ditulis huruf besar.\nconst KATA_KUNCI = ['KJP', 'KJMU', 'KLJ', 'KPDJ', 'KAJ'];\n\nconst hasil = [];\n\nfor (const item of $input.all()) {\n  const pesan = item.json.message;\n\n  // Lewati kalau bukan pesan biasa (misalnya pesan yang diedit)\n  if (!pesan || !pesan.chat) {\n    continue;\n  }\n\n  // Lewati pesan dari grup. Bot ini hanya melayani chat pribadi.\n  if (pesan.chat.type !== 'private') {\n    continue;\n  }\n\n  const chatId = pesan.chat.id;\n  // Stiker, foto, dan sejenisnya tidak punya teks, jadi diisi kosong\n  const teks = (pesan.text || '').trim();\n  const kata = teks.split(/\\s+/);\n  const kataPertama = kata[0].toLowerCase();\n\n  let jenis = 'lainnya';\n  let kode = null;\n\n  if (kataPertama === '/start' || kataPertama.startsWith('/start@')) {\n    if (kata.length > 1 && kata[1] !== '') {\n      jenis = 'start_kode';\n      kode = kata[1].toUpperCase().slice(0, 64);\n    } else {\n      jenis = 'start_kosong';\n    }\n  } else if (KATA_KUNCI.includes(teks.toUpperCase())) {\n    jenis = 'kata_kunci';\n  }\n\n  hasil.push({\n    json: {\n      chat_id: chatId,\n      teks: teks,\n      jenis: jenis,\n      kode: kode,\n    },\n  });\n}\n\nreturn hasil;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        112,
+        128
+      ],
+      "id": "5c39b6fa-850f-4f71-9f11-8de448679297",
+      "name": "Baca Pesan"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.jenis }}",
+                    "rightValue": "start_kode",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "70998281-9069-4ea9-bc41-58e7a203e582"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "start_kode"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "5030d82b-ba67-4045-9732-a647e7df6021",
+                    "leftValue": "={{ $json.jenis }}",
+                    "rightValue": "start_kosong",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "start_kosong"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "eed84b2d-4729-46ce-a4f0-e9e3cdf889b3",
+                    "leftValue": "={{ $json.jenis }}",
+                    "rightValue": "kata_kunci",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "kata_kunci"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "80febb78-2bdd-4878-a8cc-5e8034d0dd83",
+                    "leftValue": "={{ $json.jenis }}",
+                    "rightValue": "lainnya",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "lainnya"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        352,
+        96
+      ],
+      "id": "30acd4c7-2cc8-4611-b5c7-0223b257ad93",
+      "name": "Pilah Jenis Pesan"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "update pengajuan\nset telegram_chat_id = $1, telegram_terhubung_pada = now()\nwhere kode_pengajuan = upper(trim($2))\nreturning kode_pengajuan, nama_pemohon, kelurahan, status,\n          to_char(dibuat_pada at time zone 'Asia/Jakarta', 'DD-MM-YYYY HH24:MI') as waktu_pengajuan;",
+        "options": {
+          "queryReplacement": "={{ [ $json.chat_id, $json.kode ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        736,
+        -528
+      ],
+      "id": "75a78b34-c88d-43ba-82f4-fa11fdeb4f49",
+      "name": "Hubungkan Telegram",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "vYMCQxtpNBri4mBM",
+          "name": "JHJ Supabase Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "8ebda341-2f65-4984-91df-3bccecbc87cd",
+              "leftValue": "={{ $json.kode_pengajuan }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        960,
+        -528
+      ],
+      "id": "3b0a85c6-0951-44be-bc0d-c51d7830df7b",
+      "name": "Kode Ditemukan?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "64165c15-8606-4f97-830e-a739e406f25a",
+              "name": "kode_pengajuan",
+              "value": "={{ $json.kode_pengajuan }}",
+              "type": "string"
+            },
+            {
+              "id": "4ce42aa7-480d-4f12-8d93-1ac7ba9d3d1c",
+              "name": "telegram_chat_id",
+              "value": "={{ $('Baca Pesan').first().json.chat_id }}",
+              "type": "number"
+            },
+            {
+              "id": "cd3028ec-8bbc-4b0b-9cea-f97b1f655ba0",
+              "name": "isi_pesan",
+              "value": "=Halo, {{ $json.nama_pemohon }}.\n\nPengajuan Anda sudah tercatat.\nNomor tiket: {{ $json.kode_pengajuan }}\nWaktu pengajuan: {{ $json.waktu_pengajuan }}\nKelurahan: {{ $json.kelurahan }}\n\nSetiap perubahan status akan dikabarkan lewat bot ini.\n\nIni adalah simulasi di stan PPKD Jakarta Barat. Pengajuan ini tidak dikirim ke kelurahan, dinas, atau sistem resmi pemerintah mana pun.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1184,
+        -752
+      ],
+      "id": "9fd72e37-ff5e-4cff-b48a-cb72217bffb5",
+      "name": "Susun Pesan Tiket"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.telegram_chat_id }}",
+        "text": "={{ $json.isi_pesan }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1408,
+        -752
+      ],
+      "id": "2425de8a-9a65-45db-9aca-b7c90e34ddb6",
+      "name": "Kirim Tiket",
+      "webhookId": "1046d3d0-ae08-4154-b389-e69fd310e6fe",
+      "credentials": {
+        "telegramApi": {
+          "id": "9LHoJ6pnXH2CAzD5",
+          "name": "JHJ Telegram Bot"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into log_notifikasi (kode_pengajuan, workflow, jenis, penerima, telegram_chat_id, isi_pesan, berhasil)\nvalues ($1, $2, $3, $4, $5, $6, true)\nreturning id;",
+        "options": {
+          "queryReplacement": "={{ [ $('Susun Pesan Tiket').first().json.kode_pengajuan, 'W0', 'tiket', 'warga', $('Susun Pesan Tiket').first().json.telegram_chat_id, $('Susun Pesan Tiket').first().json.isi_pesan ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1632,
+        -832
+      ],
+      "id": "8f07eda3-30b6-42e2-a2aa-b583a1d8890d",
+      "name": "Catat Tiket Terkirim",
+      "credentials": {
+        "postgres": {
+          "id": "vYMCQxtpNBri4mBM",
+          "name": "JHJ Supabase Postgres"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into log_notifikasi (kode_pengajuan, workflow, jenis, penerima, telegram_chat_id, isi_pesan, berhasil, pesan_error)\nvalues ($1, $2, $3, $4, $5, $6, false, $7)\nreturning id;",
+        "options": {
+          "queryReplacement": "={{ [ $('Susun Pesan Tiket').first().json.kode_pengajuan, 'W0', 'tiket', 'warga', $('Susun Pesan Tiket').first().json.telegram_chat_id, $('Susun Pesan Tiket').first().json.isi_pesan, String($json.error?.message ?? $json.error ?? 'Pesan gagal terkirim').slice(0, 300) ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1632,
+        -656
+      ],
+      "id": "20745f42-6307-4666-8863-745903166ef5",
+      "name": "Catat Tiket Gagal",
+      "credentials": {
+        "postgres": {
+          "id": "vYMCQxtpNBri4mBM",
+          "name": "JHJ Supabase Postgres"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a0609689-2c98-45d2-8789-a5cf6dc4a7c4",
+              "name": "telegram_chat_id",
+              "value": "={{ $('Baca Pesan').first().json.chat_id }}",
+              "type": "number"
+            },
+            {
+              "id": "0e308afe-34fe-4728-99fa-9858d2282aaa",
+              "name": "isi_pesan",
+              "value": "=Maaf, kode {{ $('Baca Pesan').first().json.kode }} tidak ditemukan. Silakan pindai ulang QR yang tampil di layar setelah tombol Ajukan ditekan, atau minta bantuan petugas stan.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1200,
+        -320
+      ],
+      "id": "fc0c6b2c-9a83-4ae9-b846-7941322ca543",
+      "name": "Susun Pesan Kode Salah"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.telegram_chat_id }}",
+        "text": "={{ $json.isi_pesan }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1424,
+        -320
+      ],
+      "id": "1c11dbf3-5b75-42d6-8154-ff09e02cd543",
+      "name": "Kirim Kode Salah",
+      "webhookId": "1046d3d0-ae08-4154-b389-e69fd310e6fe",
+      "credentials": {
+        "telegramApi": {
+          "id": "9LHoJ6pnXH2CAzD5",
+          "name": "JHJ Telegram Bot"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into log_notifikasi (kode_pengajuan, workflow, jenis, penerima, telegram_chat_id, isi_pesan, berhasil)\nvalues ($1, $2, $3, $4, $5, $6, true)\nreturning id;",
+        "options": {
+          "queryReplacement": "={{ [ null, 'W0', 'balasan_otomatis', 'warga', $('Susun Pesan Kode Salah').first().json.telegram_chat_id, $('Susun Pesan Kode Salah').first().json.isi_pesan ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1632,
+        -448
+      ],
+      "id": "bff125e2-b656-4cf0-bae2-3be2d36b8cc1",
+      "name": "Catat Kode Salah Terkirim",
+      "credentials": {
+        "postgres": {
+          "id": "vYMCQxtpNBri4mBM",
+          "name": "JHJ Supabase Postgres"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into log_notifikasi (kode_pengajuan, workflow, jenis, penerima, telegram_chat_id, isi_pesan, berhasil, pesan_error)\nvalues ($1, $2, $3, $4, $5, $6, false, $7)\nreturning id;",
+        "options": {
+          "queryReplacement": "={{ [ null, 'W0', 'balasan_otomatis', 'warga', $('Susun Pesan Kode Salah').first().json.telegram_chat_id, $('Susun Pesan Kode Salah').first().json.isi_pesan, String($json.error?.message ?? $json.error ?? 'Pesan gagal terkirim').slice(0, 300) ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1632,
+        -192
+      ],
+      "id": "f2e5a2a6-7c68-40b9-bf55-9d17f24800c7",
+      "name": "Catat Kode Salah Gagal",
+      "credentials": {
+        "postgres": {
+          "id": "vYMCQxtpNBri4mBM",
+          "name": "JHJ Supabase Postgres"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a0609689-2c98-45d2-8789-a5cf6dc4a7c4",
+              "name": "telegram_chat_id",
+              "value": "={{ $('Baca Pesan').first().json.chat_id }}",
+              "type": "number"
+            },
+            {
+              "id": "0e308afe-34fe-4728-99fa-9858d2282aaa",
+              "name": "isi_pesan",
+              "value": "=Halo, ini bot Jaga Hak Jakarta, prototipe demonstrasi di stan PPKD Jakarta Barat.\n\nBot ini mengirim kabar pengajuan yang dibuat di stan. Untuk menerima kabar, pindai QR yang muncul di layar setelah pengajuan dibuat.\n\nChat ID Anda: {{ $('Baca Pesan').first().json.chat_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        832,
+        112
+      ],
+      "id": "b778583e-e822-4986-88c3-2015ad2d0da6",
+      "name": "Susun Pesan Sapaan"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.telegram_chat_id }}",
+        "text": "={{ $json.isi_pesan }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1056,
+        112
+      ],
+      "id": "1fb329df-c935-43fb-b394-3f47bc17f08a",
+      "name": "Kirim Sapaan",
+      "webhookId": "1046d3d0-ae08-4154-b389-e69fd310e6fe",
+      "credentials": {
+        "telegramApi": {
+          "id": "9LHoJ6pnXH2CAzD5",
+          "name": "JHJ Telegram Bot"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into log_notifikasi (kode_pengajuan, workflow, jenis, penerima, telegram_chat_id, isi_pesan, berhasil)\nvalues ($1, $2, $3, $4, $5, $6, true)\nreturning id;",
+        "options": {
+          "queryReplacement": "={{ [ null, 'W0', 'balasan_otomatis', 'warga', $('Susun Pesan Sapaan').first().json.telegram_chat_id, $('Susun Pesan Sapaan').first().json.isi_pesan ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1264,
+        -16
+      ],
+      "id": "78b85802-5639-4ffd-97ad-6d5e3c8927cf",
+      "name": "Catat Sapaan Terkirim",
+      "credentials": {
+        "postgres": {
+          "id": "vYMCQxtpNBri4mBM",
+          "name": "JHJ Supabase Postgres"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into log_notifikasi (kode_pengajuan, workflow, jenis, penerima, telegram_chat_id, isi_pesan, berhasil, pesan_error)\nvalues ($1, $2, $3, $4, $5, $6, false, $7)\nreturning id;",
+        "options": {
+          "queryReplacement": "={{ [ null, 'W0', 'balasan_otomatis', 'warga', $('Susun Pesan Sapaan').first().json.telegram_chat_id, $('Susun Pesan Sapaan').first().json.isi_pesan, String($json.error?.message ?? $json.error ?? 'Pesan gagal terkirim').slice(0, 300) ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1264,
+        240
+      ],
+      "id": "a4034057-3187-4f65-9084-554a61f7b6a5",
+      "name": "Catat Sapaan Gagal",
+      "credentials": {
+        "postgres": {
+          "id": "vYMCQxtpNBri4mBM",
+          "name": "JHJ Supabase Postgres"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a0609689-2c98-45d2-8789-a5cf6dc4a7c4",
+              "name": "telegram_chat_id",
+              "value": "={{ $('Baca Pesan').first().json.chat_id }}",
+              "type": "number"
+            },
+            {
+              "id": "0e308afe-34fe-4728-99fa-9858d2282aaa",
+              "name": "isi_pesan",
+              "value": "=Bot ini hanya mengirim kabar pengajuan dan belum bisa menjawab pertanyaan. Untuk bertanya, silakan gunakan halaman tanya jawab di stan Jaga Hak Jakarta atau tanyakan langsung kepada petugas stan.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        832,
+        592
+      ],
+      "id": "77031152-edea-4b51-8ca6-ec37389a4d55",
+      "name": "Susun Pesan Lain"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.telegram_chat_id }}",
+        "text": "={{ $json.isi_pesan }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1056,
+        592
+      ],
+      "id": "5390c7e4-8e86-49d5-be55-c287f9fec036",
+      "name": "Kirim Pesan Lain",
+      "webhookId": "1046d3d0-ae08-4154-b389-e69fd310e6fe",
+      "credentials": {
+        "telegramApi": {
+          "id": "9LHoJ6pnXH2CAzD5",
+          "name": "JHJ Telegram Bot"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into log_notifikasi (kode_pengajuan, workflow, jenis, penerima, telegram_chat_id, isi_pesan, berhasil)\nvalues ($1, $2, $3, $4, $5, $6, true)\nreturning id;",
+        "options": {
+          "queryReplacement": "={{ [ null, 'W0', 'balasan_otomatis', 'warga', $('Susun Pesan Lain').first().json.telegram_chat_id, $('Susun Pesan Lain').first().json.isi_pesan ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1264,
+        464
+      ],
+      "id": "3a7c5bdc-39de-4d6d-a40f-4137480e23c0",
+      "name": "Catat Pesan Lain Terkirim",
+      "credentials": {
+        "postgres": {
+          "id": "vYMCQxtpNBri4mBM",
+          "name": "JHJ Supabase Postgres"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "insert into log_notifikasi (kode_pengajuan, workflow, jenis, penerima, telegram_chat_id, isi_pesan, berhasil, pesan_error)\nvalues ($1, $2, $3, $4, $5, $6, false, $7)\nreturning id;",
+        "options": {
+          "queryReplacement": "={{ [ null, 'W0', 'balasan_otomatis', 'warga', $('Susun Pesan Lain').first().json.telegram_chat_id, $('Susun Pesan Lain').first().json.isi_pesan, String($json.error?.message ?? $json.error ?? 'Pesan gagal terkirim').slice(0, 300) ] }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1264,
+        720
+      ],
+      "id": "52010fcd-c7dc-4ea8-8a68-a7edfe0d077b",
+      "name": "Catat Pesan Lain Gagal",
+      "credentials": {
+        "postgres": {
+          "id": "vYMCQxtpNBri4mBM",
+          "name": "JHJ Supabase Postgres"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Baca Pesan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Baca Pesan": {
+      "main": [
+        [
+          {
+            "node": "Pilah Jenis Pesan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pilah Jenis Pesan": {
+      "main": [
+        [
+          {
+            "node": "Hubungkan Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Susun Pesan Sapaan",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Susun Pesan Lain",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Susun Pesan Lain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hubungkan Telegram": {
+      "main": [
+        [
+          {
+            "node": "Kode Ditemukan?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kode Ditemukan?": {
+      "main": [
+        [
+          {
+            "node": "Susun Pesan Tiket",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Susun Pesan Kode Salah",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Susun Pesan Tiket": {
+      "main": [
+        [
+          {
+            "node": "Kirim Tiket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kirim Tiket": {
+      "main": [
+        [
+          {
+            "node": "Catat Tiket Terkirim",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Catat Tiket Gagal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Susun Pesan Kode Salah": {
+      "main": [
+        [
+          {
+            "node": "Kirim Kode Salah",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kirim Kode Salah": {
+      "main": [
+        [
+          {
+            "node": "Catat Kode Salah Terkirim",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Catat Kode Salah Gagal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Susun Pesan Sapaan": {
+      "main": [
+        [
+          {
+            "node": "Kirim Sapaan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kirim Sapaan": {
+      "main": [
+        [
+          {
+            "node": "Catat Sapaan Terkirim",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Catat Sapaan Gagal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Susun Pesan Lain": {
+      "main": [
+        [
+          {
+            "node": "Kirim Pesan Lain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kirim Pesan Lain": {
+      "main": [
+        [
+          {
+            "node": "Catat Pesan Lain Terkirim",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Catat Pesan Lain Gagal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d54ac6d6-7461-44f3-87d3-65eb05631d6d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "02736739731e19082c8bc2d90e5586c35379a80fa72bd1c41a9369bb873fdf75"
+  },
+  "nodeGroups": [],
+  "id": "8wl4aK95HJEiifqm",
+  "tags": []
+}
