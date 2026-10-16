@@ -1,0 +1,15 @@
+# Pengaturan tampilan Streamlit untuk kedua halaman.
+# Berlaku kalau aplikasi dijalankan dari folder utama repo, misalnya:
+#   streamlit run app/kelurahan.py
+
+[theme]
+base = "light"
+primaryColor = "#1B3FA6"
+
+[client]
+# Menyembunyikan tombol "Deploy" dan menu pengembang di pojok kanan atas
+toolbarMode = "viewer"
+
+[browser]
+# Tidak mengirim data pemakaian ke Streamlit
+gatherUsageStats = false
