@@ -1,0 +1,48 @@
+Judul: Tanya Jawab (FAQ) SILADU: DTSEN, Bantuan Sosial, KAJ, KLJ, dan KPDJ
+Instansi: Pusat Data dan Informasi Kesejahteraan Sosial (Pusdatin Kesos), Dinas Sosial Provinsi DKI Jakarta
+Jenis: Halaman tanya jawab (FAQ) portal SILADU
+Nomor: -
+Tautan: https://siladu.jakarta.go.id/faq
+Tanggal: Tanggal terbit tidak tercantum di halaman
+Diakses: 21 Oktober 2026
+Catatan: Isi diambil dari halaman FAQ SILADU dan dirapikan per pertanyaan, bukan salinan kata per kata. Untuk kutipan resmi, rujuk tautan. Halaman ini tidak memuat tanya jawab tentang KJP Plus dan KJMU.
+========================================================================
+
+APA ITU DTSEN?
+DTSEN (Data Tunggal Sosial dan Ekonomi Nasional) menjadi dasar data untuk bantuan sosial, pemberdayaan sosial, dan penyelenggaraan kesejahteraan sosial, dengan dasar hukum Peraturan Menteri Sosial Nomor 3 Tahun 2025. DTSEN menggantikan DTKS. Datanya berbasis data kependudukan dan memuat status peringkat kesejahteraan keluarga (desil).
+
+Penetapan status dilakukan oleh pemerintah pusat. Warga dapat mengecek sendiri di cekbansos.kemensos.go.id dengan NIK.
+
+BAGAIMANA JIKA STATUS DESIL TIDAK SESUAI?
+Usulan pembaruan data dapat diajukan melalui:
+- Aplikasi Cek Bansos Kemensos
+- Form DTSEN BPS
+- Datang langsung ke petugas pendata dan pendamping sosial di kelurahan
+
+Usulan diteruskan ke BPS untuk pemeringkatan nasional, sehingga prosesnya membutuhkan waktu dan tidak selesai saat pengajuan. Pengajuan tidak otomatis menurunkan desil. Hasil akhirnya bisa lebih rendah, tetap, atau lebih tinggi. Pengajuan tidak menjamin desil turun.
+
+SUDAH TERDATA DI DTSEN, TETAPI BELUM MENDAPAT BANTUAN
+Terdata di DTSEN tidak otomatis berarti menerima bantuan sosial. Setiap program memiliki syarat dan mekanisme sendiri, serta dibatasi kuota. Program dan instansi pengelolanya:
+- Dinas Sosial Provinsi DKI Jakarta: Kartu Lansia Jakarta (KLJ), Kartu Anak Jakarta (KAJ), Kartu Penyandang Disabilitas Jakarta (KPDJ)
+- Dinas Pendidikan Provinsi DKI Jakarta: Kartu Jakarta Pintar (KJP) Plus, Kartu Jakarta Mahasiswa Unggul (KJMU), Bantuan Pendidikan Masuk Sekolah (BPMS)
+- Kementerian Sosial RI: Program Keluarga Harapan (PKH), Bantuan Pangan Non Tunai (BPNT), PBI JK
+- Kementerian Pendidikan Dasar dan Menengah RI: Program Indonesia Pintar (PIP)
+- Kementerian Pendidikan Tinggi, Sains, dan Teknologi RI: Kartu Indonesia Pintar Kuliah (KIP Kuliah)
+
+APA ITU KARTU ANAK JAKARTA (KAJ)?
+Bantuan sosial untuk anak usia 0 sampai 6 tahun dari keluarga prasejahtera.
+Syarat: anak usia dini 0 sampai 6 tahun, berada dalam kategori prasejahtera, serta warga DKI Jakarta yang berdomisili di DKI Jakarta.
+Dinas Sosial tidak membuka pendaftaran. Penerima ditentukan berdasarkan peringkat DTSEN terendah, pemadanan data (kepemilikan mobil, NJOP di atas Rp1 miliar, warga binaan panti sosial, data kependudukan, penerima PKH dan BPNT), serta verifikasi dan validasi lanjutan.
+Nilai bantuan Rp300.000 per bulan, disalurkan melalui kartu ATM Bank DKI.
+
+APA ITU KARTU LANSIA JAKARTA (KLJ)?
+Bantuan untuk menunjang kebutuhan dasar warga lanjut usia yang tidak mampu.
+Syarat: berusia paling rendah 60 tahun, prasejahtera, memiliki KTP DKI Jakarta dan berdomisili di DKI Jakarta.
+Tidak ada pendaftaran. Penerima baru ditentukan dengan mekanisme yang sama dengan KAJ.
+Nilai bantuan Rp300.000 per bulan, melalui kartu ATM Bank DKI.
+
+APA ITU KARTU PENYANDANG DISABILITAS JAKARTA (KPDJ)?
+Bantuan untuk mencegah kerentanan sosial penyandang disabilitas di DKI Jakarta.
+Syarat: terdaftar dalam data penyandang disabilitas Dinas Sosial Provinsi DKI Jakarta, prasejahtera, serta memiliki KTP dan berdomisili di DKI Jakarta.
+Tidak ada pendaftaran. Penerima ditentukan dengan mekanisme yang sama dengan KAJ dan KLJ, ditambah syarat sudah terdaftar dalam pendataan disabilitas Dinas Sosial.
+Nilai bantuan Rp300.000 per bulan, melalui kartu ATM Bank DKI.

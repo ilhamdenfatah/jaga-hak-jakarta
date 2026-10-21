@@ -1,0 +1,39 @@
+Judul: DTSEN Jadi Rujukan Bersama, BPS Jelaskan Arti Desil
+Instansi: Badan Pusat Statistik (BPS) RI
+Jenis: Berita dan siaran pers
+Nomor: -
+Tautan: https://www.bps.go.id/id/news/2026/08/22/938/dtsen-jadi-rujukan-bersama--bps-jelaskan-arti-desil.html
+Tanggal: 22 Agustus 2026
+Diakses: 21 Oktober 2026
+Catatan: Isi diambil dari halaman berita BPS dan dirapikan per topik, bukan salinan kata per kata. Narasumber: Amalia Adininggar Widyasanti, Kepala BPS RI. Untuk kutipan resmi, rujuk tautan. Dokumen ini menggantikan file kompilasi tim "DTSEN.txt".
+========================================================================
+
+DTSEN SEBAGAI RUJUKAN BERSAMA
+Data Tunggal Sosial dan Ekonomi Nasional (DTSEN) menjadi acuan bersama pemerintah untuk perencanaan, penetapan sasaran, dan evaluasi program. Pemanfaatannya diatur dalam Instruksi Presiden Nomor 4 Tahun 2025. BPS menyusun dan mengelola DTSEN. Kementerian, lembaga, dan pemerintah daerah berperan sebagai penyedia sumber data dan pendukung pemutakhiran. DTSEN awalnya dibangun dari integrasi DTKS, P3KE, dan Regsosek, lalu diperkaya data administratif dan disinkronkan secara berkala dengan data kependudukan dari Ditjen Dukcapil Kemendagri.
+
+Per 10 Juli 2026, DTSEN Versi 3 Tahun 2026 mencakup 290,13 juta record individu dan 95,98 juta record keluarga.
+
+ARTI DESIL
+Desil adalah pengelompokan keluarga berdasarkan posisi relatif tingkat kesejahteraannya. Keluarga diurutkan menurut berbagai karakteristik sosial ekonomi, lalu dibagi menjadi 10 kelompok yang masing-masing berisi sekitar 10 persen keluarga. Desil 1 berarti kesejahteraan relatif paling rendah, desil 10 paling tinggi. Angka desil menunjukkan posisi relatif suatu keluarga dibandingkan keluarga lainnya. Contohnya, desil 3 berarti keluarga berada di kelompok ketiga dari sepuluh.
+
+APAKAH DESIL SAMA DENGAN PENDAPATAN?
+Tidak. Desil bukan ukuran kemiskinan absolut dan bukan ukuran nominal pendapatan atau kekayaan. Keluarga dalam desil yang sama tidak selalu memiliki pendapatan, pengeluaran, atau kondisi sosial ekonomi yang sama.
+
+Desil tidak ditentukan hanya oleh penghasilan, satu jenis barang, daya listrik, pekerjaan, atau satu indikator tertentu. Yang dipertimbangkan antara lain kondisi perumahan, sumber air minum, bahan bakar memasak, kepemilikan aset, daya dan konsumsi listrik, komposisi keluarga, pendidikan, pekerjaan, kesehatan, dan disabilitas. Semua faktor dianalisis bersama dengan metode statistik Proxy Means Test (PMT), pendekatan yang juga dipakai secara internasional ketika data pendapatan atau konsumsi sulit diperoleh atau diverifikasi.
+
+MENGAPA DESIL BISA BERUBAH?
+Posisi desil dapat berubah seiring perubahan kondisi sosial ekonomi keluarga dan posisi relatifnya terhadap keluarga lain. Karena itu pemutakhiran data dilakukan terus-menerus. Perubahan pada satu indikator saja tidak otomatis mengubah desil, karena semua karakteristik dipertimbangkan bersama.
+
+SIAPA YANG MENETAPKAN DESIL?
+BPS menyusun dan mengelola DTSEN, termasuk penghitungan desil. Pemutakhiran memanfaatkan data administrasi, hasil sensus dan survei, pemutakhiran dari kementerian, lembaga, dan pemerintah daerah, pengecekan lapangan (ground check), serta pembaruan dari masyarakat.
+
+APAKAH DESIL MENENTUKAN PENERIMA BANSOS?
+Desil bukan daftar penerima program. Kementerian dan lembaga dapat memakai desil sebagai salah satu dasar penentuan sasaran atau prioritas, sesuai tujuan dan ketentuan masing-masing program. Karena itu penggunaan desil harus dibaca dalam konteks program yang bersangkutan.
+
+JALUR BAGI WARGA YANG MERASA DATANYA TIDAK SESUAI
+Warga dapat mengajukan usul dan sanggah melalui kanal resmi:
+- Cek Bansos (cekbansos.kemensos.go.id) atau aplikasi Cek Bansos
+- SIKS-NG, melalui operator desa atau kelurahan
+- Cek DTSEN (dtsen-form.bps.go.id)
+
+Pengajuan pembaruan tidak otomatis mengubah desil. Informasi yang masuk menjadi bagian dari proses pemutakhiran dan penghitungan ulang, sehingga posisi desil tetap mengikuti data dan metode yang berlaku.

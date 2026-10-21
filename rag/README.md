@@ -1,33 +1,46 @@
-# Folder rag
+# Folder rag: chatbot tanya jawab
 
-Script chatbot: membaca dokumen bersih, memotongnya, membuat embedding di komputer lokal, dan menyimpannya di Chroma. Diisi PJ Jalur A.
+Chatbot untuk tab Tanya jawab di halaman Warga. Jawabannya hanya disusun dari dokumen resmi di `data/dokumen_bersih/` dan selalu menyebut sumbernya.
 
-## Database Chroma tidak disimpan di repo
+## Cara kerja singkat
 
-Folder `rag/chroma_db/` masuk `.gitignore`. Alasannya, isinya file biner yang membuat repo membengkak dan mudah bentrok antar orang. Membangunnya ulang hanya butuh beberapa menit, jadi setiap PC dan laptop membangun sendiri dari teks di `data/dokumen_bersih/`.
+1. `dokumen.py` membaca semua file `.txt` di `data/dokumen_bersih/` lalu memotongnya menjadi potongan kecil (sekitar 900 huruf, mengikuti batas pasal atau bagian).
+2. `pencarian.py` mencari potongan yang paling cocok dengan pertanyaan memakai BM25, yaitu pencarian kata seperti indeks di buku. Tidak memakai AI dan tidak perlu mengunduh model. Indeks dibangun otomatis saat pertanyaan pertama masuk, kurang dari satu detik.
+3. `chatbot.py` mengirim potongan itu dan pertanyaan ke Groq (model `openai/gpt-oss-120b`), lalu mengembalikan jawaban dan daftar sumber.
+4. `jawaban_cadangan.py` berisi jawaban tulisan tangan untuk pertanyaan demo utama. Dipakai hanya kalau Groq tidak bisa dihubungi.
 
-Sekali jalan, script ini juga mengunduh model embedding ke perangkat tersebut (butuh internet pertama kali), jadi dua urusan selesai sekaligus.
+Tidak ada folder database. File `build_chroma.py` dan folder `rag/chroma_db/` tidak dipakai lagi.
 
-## Cara membangun ulang
+## Kesepakatan dengan halaman Warga
 
-Dari folder utama repo, dengan lingkungan Python aktif:
+```python
+from rag.chatbot import jawab
+
+hasil = jawab("Apa syarat KJP Plus?")
+# hasil["jawaban"]  teks jawaban
+# hasil["sumber"]   daftar {"judul", "tautan", "tanggal_akses"}, kosong kalau informasi tidak tersedia
+```
+
+Fungsi `jawab` tidak pernah menghentikan program, termasuk saat internet putus atau Groq bermasalah.
+
+## Isian .env
+
+- `GROQ_API_KEY` wajib.
+- `GROQ_MODEL` boleh dikosongkan. Kalau kosong, dipakai `openai/gpt-oss-120b`.
+- `GROQ_MODEL_CADANGAN` boleh dikosongkan. Kalau kosong, dipakai `openai/gpt-oss-20b`. Model ini dipakai saat model utama kena batas pemakaian.
+
+Paket gratis Groq membatasi sekitar 8.000 token per menit untuk setiap model, dan satu pertanyaan memakai sekitar 2.000 sampai 2.500 token. Karena itu chatbot memakai dua model bergantian, menunggu sebentar kalau keduanya penuh, dan menyimpan jawaban selama aplikasi berjalan sehingga pertanyaan yang sama tidak memakai kuota lagi.
+
+## Menambah atau mengganti dokumen
+
+Taruh file `.txt` baru di `data/dokumen_bersih/` dengan kepala file seperti dokumen lain (Judul, Instansi, Jenis, Nomor, Tautan, Tanggal, Diakses, Catatan, lalu baris `=====`). Matikan Streamlit lalu jalankan ulang supaya dokumen baru terbaca. Kalau dokumen sumber jawaban cadangan berubah, periksa ulang isi `jawaban_cadangan.py`.
+
+## Uji sebelum dipakai
+
+Jalankan dari folder utama repo:
 
 ```
-python rag/build_chroma.py
+python -m rag.uji_chatbot --cari       uji pencarian saja, tanpa Groq
+python -m rag.uji_chatbot --cadangan   uji jawaban cadangan seolah-olah Groq mati
+python -m rag.uji_chatbot              uji lengkap dengan Groq asli (sekitar 25 permintaan)
 ```
-
-Jalankan ulang setiap kali isi `data/dokumen_bersih/` berubah. Folder `rag/chroma_db/` lama dihapus lalu dibuat baru, jadi tidak ada data dobel.
-
-Tiga catatan:
-
-- Tutup aplikasi Streamlit dulu sebelum membangun ulang. Di Windows, folder yang sedang dipakai aplikasi tidak bisa dihapus dan script akan berhenti dengan pesan "Permission denied" atau "Access is denied".
-- Jalankan script ini lewat terminal, satu kali per proses. Jangan dipanggil dari dalam aplikasi.
-- Kalau ada file di `data/dokumen_bersih/` yang keterangannya kurang, script berhenti dan menyebut nama filenya. Database lama tetap utuh sampai semua file lolos pemeriksaan.
-
-## File
-
-| File | Tugas |
-|---|---|
-| `build_chroma.py` | Membaca `data/dokumen_bersih/*.txt`, memotong, membuat embedding, menyimpan ke Chroma. Pengaturan (ukuran potongan, nama model) ada di bagian atas file. |
-
-Script tanya jawab (prompt, pemanggilan Groq) menyusul sebagai file terpisah di folder ini.
